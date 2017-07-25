@@ -154,6 +154,7 @@ describe('', function() {
             .then(function(urls) {
               if (urls['0'] && urls['0']['title']) {
                 var foundTitle = urls['0']['title'];
+                console.log('foundTitle: ', foundTitle);
               }
               expect(foundTitle).to.equal('Funny pictures of animals, funny dog pictures');
               done();

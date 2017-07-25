@@ -20,6 +20,7 @@ app.use(bodyParser.json());
 // Parse forms (signup/login)
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
+
 app.use(session({
   secret: 'keyboard cat',
   cookie: { maxAge: 60000 },
@@ -42,7 +43,8 @@ app.get('/links', util.checkUser, function(req, res) {
 });
 
 app.get('/logout', function(req, res) {
-  res.redirect('login');
+  req.session.destroy();
+  res.redirect('/login');
 });
 
 app.post('/links', util.checkUser, function(req, res) {
@@ -85,7 +87,7 @@ app.get('/signup', function(req, res) {
 });
 
 app.post('/signup', function(req, res) {
-  new User({ username: req.body.username, password: req.body.password}).fetch().then(function(found) {
+  new User({ username: req.body.username }).fetch().then(function(found) {
     if (found) {
       res.status(200).send(found.attributes);
     } else {
@@ -105,8 +107,9 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/login', function(req, res) {
-  new User({username: req.body.username, password: req.body.password}).fetch().then(function(found) {
+  new User({ username: req.body.username }).fetch().then(function(found) {
     if (found) {
+      req.session.user = found;
       res.redirect('/create');
     } else {
       res.redirect('/signup');
