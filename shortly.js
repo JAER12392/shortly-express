@@ -41,6 +41,10 @@ app.get('/links', util.checkUser, function(req, res) {
   });
 });
 
+app.get('/logout', function(req, res) {
+  res.redirect('login');
+});
+
 app.post('/links', util.checkUser, function(req, res) {
   var uri = req.body.url;
 
